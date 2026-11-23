@@ -1,0 +1,9 @@
+[project]
+name = "freelance-agents"
+version = "0.1.0"
+description = "Agentic freelancing system: finds jobs, writes proposals, delivers work."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

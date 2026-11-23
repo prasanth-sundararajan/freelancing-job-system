@@ -1,0 +1,171 @@
+# Agentic freelancing system configuration.
+# Keys match the "Config reference" table in skills.md.
+
+database: data/freelance.db
+skills_file: skills.md
+portfolio_file: data/portfolio.json
+
+# --- Safety switches ---------------------------------------------------------
+kill_switch: false        # true = stop all outbound actions immediately
+dry_run: false            # true = log bids/messages instead of sending them (every send still needs your tap)
+
+# --- What we work on ---------------------------------------------------------
+niches: [python-scripts, web-scraping, landing-pages, data-cleaning, seo-articles]
+capabilities:
+  - Python scripts and automation
+  - Web scraping of public pages (no login walls) with export to CSV/Excel/JSON
+  - Simple static landing pages (HTML/CSS/JS)
+  - Data cleaning and transformation in Excel/CSV/pandas
+  - SEO blog articles
+
+# --- Thresholds --------------------------------------------------------------
+min_score: 70
+min_margin: 0.60
+approval_threshold: 500          # USD; contracts above this need a human
+daily_bid_limit: 15
+max_discount_pct: 10
+max_timeline_extension_days: 3
+max_job_age_hours: 24
+allow_unverified_payment: false     # client confirmed NOT payment-verified -> skip
+allow_unknown_payment_status: true  # source didn't say (Freelancer hides owner details from
+                                    # this account); you still review every bid before it's sent
+max_retries: 2                   # per agent per state, then escalate
+
+# Jobs mentioning any of these are rejected in code before any model call
+# (whole words/phrases, case-insensitive). Applies to every source.
+exclude_keywords: [
+  # off-niche
+  video, videos, voice-over, voiceover, voice over, animation, cold call, cold calling,
+  telemarketing, sales rep, commission only, commission-only, logo, illustration, ios, android,
+  flutter, react native, unity, blockchain, crypto, trading bot, onlyfans, adult,
+  full-time, full time, long-term employee, on-site,
+  # academic
+  thesis, assignment, homework,
+  # typical bait / low-quality posts
+  beginners welcome, beginner welcome, open to beginners, hiring freshers, freshers, apply now,
+  no experience needed, no experience required, easy money, work from home
+]
+
+budget:
+  per_job_pct: 0.15              # AI cost cap as a share of the job price
+  revision_buffer: 0.30          # added to AI cost estimates
+
+sources:
+  allowed: [freelancer_api, rss, email, file]
+
+# api_bid_allowed: may the system bid WITHOUT a human? Freelancer's API terms
+# prohibit automatic bidders, so it's false: bids go to the approval queue.
+platforms:
+  freelancer: { api_bid_allowed: false }
+  upwork:     { api_bid_allowed: false }
+  fiverr:     { api_bid_allowed: false }
+  other:      { api_bid_allowed: false }
+
+# --- Freelancer.com API ------------------------------------------------------
+# Token: FREELANCER_OAUTH_TOKEN in .env (personal token from
+# https://accounts.freelancer.com/settings/develop, valid 30 days;
+# sandbox tokens come from accounts.freelancer-sandbox.com).
+freelancer:
+  environment: production        # production | sandbox (tokens only work in their own environment)
+  # Lets `approve <job_id> --submit` post ONE human-approved bid through the API.
+  # Freelancer prohibits automatic bidders; confirm with api-support@freelancer.com first.
+  # Telegram "🚀 Place bid" -> "✅ Yes, place it" posts ONE bid via the official API.
+  # Every bid needs your tap. Freelancer prohibits automatic bidders; you chose to enable this.
+  bid_via_api: true
+  # Telegram "Approve" opens the project in Chrome on this PC and fills in the bid
+  # form; you click Place Bid yourself. Sign in once in that Chrome window.
+  bid_fill:
+    enabled: true
+    browser_profile: data/browser_profile
+  search:
+    # One search per group, filtered by Freelancer skill. Names must match Freelancer's
+    # skill names exactly (unknown names are reported by `scout --freelancer`).
+    # Your Freelancer profile must list a project's skills before you can bid on it.
+    skill_groups:
+      scraping: [Web Scraping, Data Scraping, Scrapy, Web Crawling]
+      python:   [Python, Automation]
+      data:     [Excel, Data Processing, Data Cleansing]
+      web:      [HTML, CSS, Landing Pages]
+      writing:  [SEO Writing, Article Writing]
+    queries: []                  # optional extra keyword searches, e.g. ["price tracker"]
+    project_types: [fixed]
+    min_price: 50                # USD, project budget minimum
+    max_price: 1000              # USD, project budget maximum
+    limit_per_query: 30          # stay well under the rate limit
+
+# --- Job search schedule -------------------------------------------------------
+# Daily, local time. Install/refresh the tasks: scripts\schedule_task.py
+schedule:
+  cycle_times: ["14:00", "18:00", "22:00"]   # UK afternoon, US morning, US midday
+  missed_grace_minutes: 45                   # Ops agent runs a missed slot after this (PC was asleep)
+
+# --- Ops agent (watchdog, every 15 min) --------------------------------------
+ops:
+  bot_heartbeat_max_minutes: 5     # bot silent longer than this -> restart it
+  stuck_job_hours: 3               # planning/building/qa longer than this -> stop + alert
+  low_balance_usd: 2.0             # DeepSeek balance below this -> alert
+  signin_check_minutes: 60         # how often to check Chrome is still signed in to Freelancer
+  alert_repeat_hours: 6
+
+# --- Telegram ----------------------------------------------------------------
+telegram:
+  daily_report_hour: 21          # local time; daily AI-cost + activity report
+
+# --- Delivery sandbox --------------------------------------------------------
+# Builder/QA work in data/projects/<job>/ with their own virtualenv, no API keys
+# in the environment, and only python / pytest / pip install of these packages.
+# Without Docker there's no network or CPU/memory isolation.
+sandbox:
+  timeout_seconds: 180
+  allowed_packages: [pytest, requests, httpx, beautifulsoup4, lxml, selectolax, pandas, numpy, openpyxl,
+                     xlsxwriter, matplotlib, jinja2, python-dotenv, pydantic, pyyaml, tabulate, python-dateutil]
+
+# --- Models ------------------------------------------------------------------
+provider: deepseek               # deepseek | anthropic
+
+deepseek:
+  base_url: https://api.deepseek.com
+  default_model: deepseek-flash
+  max_output_tokens: 8000
+  models:                        # per-agent overrides; everything else uses default_model
+    proposal_writer: deepseek-v4-pro
+    planner: deepseek-v4-pro
+    builder: deepseek-v4-pro
+    qa: deepseek-v4-pro
+  # USD per 1M tokens. ESTIMATES, not verified: check
+  # https://api-docs.deepseek.com/quick_start/pricing and update.
+  pricing_per_mtok:
+    deepseek-flash:  { input: 0.28, cache_hit: 0.028, output: 0.42 }
+    deepseek-v4-pro: { input: 0.55, cache_hit: 0.14,  output: 2.19 }
+
+# Claude models per agent (used when provider: anthropic)
+models:
+  orchestrator: claude-sonnet-5-5
+  scout: claude-haiku-5-5
+  qualifier: claude-haiku-5-5
+  estimator: claude-sonnet-5-5
+  proposal_writer: claude-sonnet-5-5
+  client_comms: claude-sonnet-5-5
+  planner: claude-opus-5-5
+  builder: claude-opus-5-5
+  qa: claude-opus-5-5
+  delivery: claude-sonnet-5-5
+  finance: claude-haiku-5-5
+  ops: claude-haiku-5-5
+
+effort:
+  qualifier: low
+  estimator: medium
+  proposal_writer: medium
+  client_comms: low
+  planner: high
+  builder: high
+  qa: high
+  delivery: low
+  finance: low
+
+# USD per 1M tokens (Anthropic first-party prices). Cache writes cost 1.25x input.
+pricing_per_mtok:
+  claude-opus-5-5:   { input: 4.00, output: 20.00, cache_read: 0.20 }
+  claude-sonnet-5-5: { input: 2.00, output: 10.00, cache_read: 0.10 }
+  claude-haiku-5-5:  { input: 0.10, output: 0.50,  cache_read: 0.01 }

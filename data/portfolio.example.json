@@ -1,0 +1,14 @@
+[
+  {
+    "title": "E-commerce price tracker",
+    "url": "https://your-portfolio.example/price-tracker",
+    "tags": ["python", "web scraping", "excel", "automation"],
+    "summary": "Scrapes 4 shops daily into Excel with retry handling."
+  },
+  {
+    "title": "Bakery landing page",
+    "url": "https://your-portfolio.example/bakery-landing",
+    "tags": ["html", "css", "landing page", "responsive"],
+    "summary": "One-page responsive site with menu, hours and contact form."
+  }
+]

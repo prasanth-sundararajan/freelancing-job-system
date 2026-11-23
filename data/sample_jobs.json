@@ -1,0 +1,32 @@
+[
+  {
+    "job_id": "freelancer:88231",
+    "platform": "freelancer",
+    "url": "https://www.freelancer.com/projects/88231",
+    "title": "Python script to scrape product prices from 3 sites into Excel",
+    "description": "I need a Python script that collects product name, price and URL from three public e-commerce sites and saves everything into one Excel file. Should be easy to rerun daily.",
+    "skills": ["Python", "Web Scraping", "Excel"],
+    "budget": { "type": "fixed", "min": 100, "max": 200, "currency": "USD" },
+    "client": { "country": "US", "rating": 4.9, "hires": 12, "spent": 3400, "payment_verified": true }
+  },
+  {
+    "job_id": "upwork:55102",
+    "platform": "upwork",
+    "url": "https://www.upwork.com/jobs/55102",
+    "title": "Logo and full brand kit",
+    "description": "Need logo + full brand kit. Contact me on WhatsApp first. Do a free sample to get hired.",
+    "skills": ["Logo Design", "Branding"],
+    "budget": { "type": "fixed", "min": 10, "max": 15, "currency": "USD" },
+    "client": { "country": "Unknown", "rating": null, "hires": 0, "spent": 0, "payment_verified": false }
+  },
+  {
+    "job_id": "upwork:66010",
+    "platform": "upwork",
+    "url": "https://www.upwork.com/jobs/66010",
+    "title": "Simple landing page for a yoga studio",
+    "description": "One-page responsive landing page: hero, class schedule, pricing, contact form (form can post to Formspree). Static HTML/CSS is fine.",
+    "skills": ["HTML", "CSS", "Landing Page"],
+    "budget": { "type": "fixed", "min": 300, "max": 500, "currency": "USD" },
+    "client": { "country": "GB", "rating": 4.7, "hires": 5, "spent": 1200, "payment_verified": true }
+  }
+]

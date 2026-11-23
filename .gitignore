@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets: API keys and tokens live only in .env (see .env.example)
+.env
+.env.*
+!.env.example
+
+# Runtime data (personal, large or machine-specific)
+data/*.db
+data/*.db-*
+data/cycle.lock
+data/browser_profile/
+data/projects/
+data/deliveries/
+data/logs/
+
+# Personal account backups
+profile/backup_*.json
+
+# Separate project (Mercor agent) - not part of this repo
+mercor/

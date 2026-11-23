@@ -1,0 +1,23 @@
+[
+  {
+    "title": "ReviewLens: Review Analyzer",
+    "url": "https://www.freelancer.com/u/prasanthspbio",
+    "freelancer_portfolio_id": 16136944,
+    "tags": ["python", "data cleaning", "data processing", "data cleansing", "excel", "csv", "pandas", "dashboard", "report", "automation", "reviews"],
+    "summary": "Cleans and tags hundreds of customer reviews from a weekly CSV with pandas; dashboard, Excel-ready export and an automatic weekly report."
+  },
+  {
+    "title": "LaunchScout: Competitor Research",
+    "url": "https://www.freelancer.com/u/prasanthspbio",
+    "freelancer_portfolio_id": 16136950,
+    "tags": ["python", "web scraping", "data scraping", "scraper", "beautifulsoup", "requests", "research", "data extraction", "pdf", "report", "automation"],
+    "summary": "Searches the web and scrapes competitor sites and reviews into a sourced competitor report (Markdown and PDF)."
+  },
+  {
+    "title": "DataPilot: AI Data Analyst",
+    "url": "https://www.freelancer.com/u/prasanthspbio",
+    "freelancer_portfolio_id": 16136958,
+    "tags": ["python", "excel", "csv", "data analysis", "data processing", "pandas", "matplotlib", "charts", "spreadsheet", "pdf", "automation"],
+    "summary": "Answers business questions about an Excel/CSV file with checked numbers, charts, a re-runnable Python script and a PDF summary."
+  }
+]

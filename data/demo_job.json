@@ -1,0 +1,12 @@
+[
+  {
+    "job_id": "demo:html-to-excel",
+    "platform": "other",
+    "url": "https://example.com/demo",
+    "title": "DEMO: Python script to turn an HTML product list into Excel",
+    "description": "Demo job for testing the delivery pipeline (not a real client). Write a Python script that reads an HTML file of products (each product has a name and a price like '$1,299.00'), and saves them to products.xlsx with columns name and price. Prices must be stored as numbers. Include a small sample HTML file for testing. No internet access needed.",
+    "skills": ["Python", "Excel", "Data Processing"],
+    "budget": { "type": "fixed", "min": 100, "max": 150, "currency": "USD" },
+    "client": { "country": "US", "rating": 5.0, "hires": 3, "spent": 500, "payment_verified": true }
+  }
+]
